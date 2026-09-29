@@ -15,8 +15,13 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
+      - name: Install Maven
+        run: |
+          curl -fsSL -o /tmp/maven.zip https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.16/apache-maven-3.9.16-bin.zip
+          unzip -q /tmp/maven.zip -d "$HOME"
+          echo "$HOME/apache-maven-3.9.16/bin" >> "$GITHUB_PATH"
       - name: Test and package
-        run: ./mvnw -B verify
+        run: mvn -B verify
 
   sast:
     name: SAST SpotBugs
@@ -28,8 +33,13 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
+      - name: Install Maven
+        run: |
+          curl -fsSL -o /tmp/maven.zip https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.16/apache-maven-3.9.16-bin.zip
+          unzip -q /tmp/maven.zip -d "$HOME"
+          echo "$HOME/apache-maven-3.9.16/bin" >> "$GITHUB_PATH"
       - name: SpotBugs
-        run: ./mvnw -B spotbugs:check
+        run: mvn -B spotbugs:check
 
   sca:
     name: SCA OWASP Dependency-Check
@@ -41,14 +51,19 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
+      - name: Install Maven
+        run: |
+          curl -fsSL -o /tmp/maven.zip https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.16/apache-maven-3.9.16-bin.zip
+          unzip -q /tmp/maven.zip -d "$HOME"
+          echo "$HOME/apache-maven-3.9.16/bin" >> "$GITHUB_PATH"
       - name: OWASP Dependency-Check
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: |
           if [ -n "$NVD_API_KEY" ]; then
-            ./mvnw -B org.owasp:dependency-check-maven:check -DnvdApiKey="$NVD_API_KEY"
+            mvn -B org.owasp:dependency-check-maven:check -DnvdApiKey="$NVD_API_KEY"
           else
-            ./mvnw -B org.owasp:dependency-check-maven:check
+            mvn -B org.owasp:dependency-check-maven:check
           fi
       - uses: actions/upload-artifact@v4
         if: always()
