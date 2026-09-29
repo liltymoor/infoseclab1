@@ -1,0 +1,29 @@
+$kind: http-request
+method: POST
+url: '{{base_url}}/api/posts'
+order: 6000
+headers:
+  - key: Content-Type
+    value: application/json
+  - key: Authorization
+    value: 'Bearer {{token}}'
+body:
+  type: json
+  content: |-
+    {
+      "title": "<script>alert(1)</script>",
+      "body": "<img src=x onerror=alert(1)>"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("post is created", function () {
+          pm.response.to.have.status(201);
+      });
+      pm.test("user content is escaped", function () {
+          const text = pm.response.text();
+          pm.expect(text).to.not.include("<script");
+          pm.expect(text).to.not.include("<img");
+          pm.expect(text).to.include("&lt;script&gt;");
+      });

@@ -1,0 +1,19 @@
+spring:
+  docker:
+    compose:
+      enabled: false
+  datasource:
+    url: jdbc:h2:mem:infoseclab1;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+jwt:
+  secret: dGVzdC1vbmx5LWp3dC1zZWNyZXQta2V5LTMyYnl0ZXM=
+
+demo:
+  username: demo
+  password: test-only-password
