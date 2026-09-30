@@ -119,9 +119,13 @@
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>4.9.3.0</version>
                 <configuration>
+                    <skip>false</skip>                      <!-- явно не пропускать -->
+                    <skipEmptyReport>false</skipEmptyReport>
                     <effort>Default</effort>
                     <threshold>Medium</threshold>
                     <failOnError>true</failOnError>
+                    <xmlOutput>true</xmlOutput>             <!-- XML-отчёт -->
+                    <htmlOutput>true</htmlOutput>
                 </configuration>
             </plugin>
             <plugin>
