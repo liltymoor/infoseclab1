@@ -39,7 +39,14 @@ jobs:
           unzip -q /tmp/maven.zip -d "$HOME"
           echo "$HOME/apache-maven-3.9.16/bin" >> "$GITHUB_PATH"
       - name: SpotBugs
-        run: mvn -B spotbugs:check
+        run: mvn -B -DskipTests compile spotbugs:spotbugs spotbugs:check
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: spotbugs-report
+          path: |
+            target/spotbugsXml.xml
+            target/site/spotbugs.html
 
   sca:
     name: SCA OWASP Dependency-Check

@@ -188,7 +188,7 @@ Workflow `.github/workflows/ci.yml` на каждый push/PR запускает
 | Job | Инструмент | Назначение |
 |-----|------------|------------|
 | Build and test | `mvn verify` | сборка и тесты |
-| **SAST SpotBugs** | `spotbugs-maven-plugin` | статический анализ bytecode (баги / security smells) |
+| **SAST SpotBugs** | `spotbugs-maven-plugin` | статический анализ bytecode; отчёт `spotbugs-report` (XML/HTML) |
 | **SCA OWASP Dependency-Check** | `dependency-check-maven` | уязвимости в зависимостях (CVE); HTML/JSON-отчёт как artifact |
 
 ### Скриншоты из GitHub Actions
@@ -207,11 +207,13 @@ Workflow `.github/workflows/ci.yml` на каждый push/PR запускает
 
 ![SCA OWASP Dependency-Check — успешный прогон в Actions](docs/screenshots/sca-dependency-check.png)
 
-Отчёт SCA дополнительно сохраняется артефактом `dependency-check-report` (`target/dependency-check-report.html` / `.json`) и доступен во вкладке Artifacts того же run.
+Отчёты сохраняются артефактами run’а:
+- SAST: `spotbugs-report` (`target/spotbugsXml.xml`, `target/site/spotbugs.html`)
+- SCA: `dependency-check-report` (`target/dependency-check-report.html` / `.json`)
 
 Локально:
 
 ```bash
-./mvnw -B spotbugs:check
-./mvnw -B org.owasp:dependency-check-maven:check
+mvn -B -DskipTests compile spotbugs:spotbugs spotbugs:check
+mvn -B org.owasp:dependency-check-maven:check
 ```
